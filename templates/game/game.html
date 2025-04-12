@@ -1,0 +1,18 @@
+{% extends 'game/base.html' %}
+
+{% block content %}
+    <h2>Выберите правильный перевод:</h2>
+    <img src="{{ kanji.image.url }}" alt="Kanji" width="150">
+    <form method="post">
+        {% csrf_token %}
+        {% for option in options %}
+            <button type="submit" name="answer" value="{{ option }}"
+                    class="btn {% if option == request.POST.answer %}
+                                {% if option == kanji.correct_translation %}correct
+                                {% elif request.session.attempts %}wrong{% endif %}
+                            {% endif %}">
+                {{ option }}
+            </button><br>
+        {% endfor %}
+    </form>
+{% endblock %}

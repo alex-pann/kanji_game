@@ -1,0 +1,82 @@
+{% extends 'game/base.html' %}
+{% load static %}
+
+{% block title %}Рейтинг игроков{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>🏆 Рейтинг игроков</h1>
+    {% load static %}
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'game/images/background.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            font-family: sans-serif;
+        }
+
+        .content {
+            background-color: rgba(0, 0, 0, 0.6);
+            margin: 5vh auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 15px;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            color: #fff;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        h1 {
+            color: #fff;
+        }
+
+
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #9932CC;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #491961;
+        }
+    </style>
+    <table>
+        <tr>
+            <th>Имя</th>
+            <th>Очки</th>
+        </tr>
+        {% for score in scores %}
+        <tr>
+            <td>{{ score.user.username }}</td>
+            <td>{{ score.total_score }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">Пока никто не играл (╥_╥)</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'home' %}" class="button">🏠 Домой</a>
+</div>
+{% endblock %}
