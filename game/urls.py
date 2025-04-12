@@ -10,4 +10,6 @@ urlpatterns = [
     path('ranking/', views.ranking, name='ranking'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('delete_account/', views.delete_account, name='delete_account'),
+    path('nopage/', views.nopage, name='nopage'),
+    path('dictionary/', views.dictionary, name='dictionary'),
 ]

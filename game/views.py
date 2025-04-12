@@ -7,9 +7,12 @@ from django.contrib.auth import logout
 from django.db import models
 import random
 
-question_count = 7
+question_count = 6
 
 def home(request):
+    for key in ['attempts', 'question_index', 'score', 'questions']:
+        if key in request.session:
+            del request.session[key]
     return render(request, 'game/home.html')
 
 def register(request):
@@ -24,6 +27,13 @@ def register(request):
         form = RegisterForm()
     return render(request, 'game/register.html', {'form': form})
 
+def dictionary(request):
+    all_kanji = Kanji.objects.all()
+    return render(request, 'game/dictionary.html', {'kanji_list': all_kanji})
+
+def nopage(request):
+    return render(request, 'game/nopage.html')
+
 @login_required
 def game_view(request):
     if 'questions' not in request.session:
@@ -37,13 +47,27 @@ def game_view(request):
     question_ids = request.session['questions']
 
     if current_idx >= len(question_ids):
-        Score.objects.filter(user=request.user).update(total_score=models.F('total_score') + request.session['score'])
-        del request.session['questions']
+        Score.objects.filter(user=request.user).update(
+            total_score=models.F('total_score') + request.session['score']
+        )
+        request.session.pop('questions', None)
+        request.session.pop('current', None)
+        request.session.pop('score', None)
+        request.session.pop('options', None)
+        request.session.pop('attempts', None)
         return redirect('ranking')
 
     kanji = Kanji.objects.get(id=question_ids[current_idx])
-    options = [kanji.correct_translation, kanji.wrong_option1, kanji.wrong_option2]
-    random.shuffle(options)
+
+    if 'options' not in request.session or request.session.get('current_kanji_id') != kanji.id:
+        other_kanji = Kanji.objects.exclude(id=kanji.id)
+        wrong_choices = random.sample(list(other_kanji), 2) if other_kanji.count() >= 2 else []
+        options = [kanji.correct_translation] + [k.correct_translation for k in wrong_choices]
+        random.shuffle(options)
+        request.session['options'] = options
+        request.session['current_kanji_id'] = kanji.id
+    else:
+        options = request.session['options']
 
     if request.method == 'POST':
         answer = request.POST.get('answer')
@@ -52,11 +76,14 @@ def game_view(request):
                 request.session['score'] += 1
             request.session['current'] += 1
             request.session.pop('attempts', None)
+            request.session.pop('options', None)
+            request.session.pop('current_kanji_id', None)
             return redirect('game')
         else:
             request.session['attempts'] = True
 
-    return render(request, 'game/game.html', {'kanji': kanji, 'options': options})
+    return render(request, 'game/game.html', {'kanji': kanji, 'options': options,
+                                              'question_number': current_idx + 1})
 
 
 def ranking(request):
@@ -68,3 +95,4 @@ def delete_account(request):
     logout(request)
     user.delete()
     return redirect('home')
+

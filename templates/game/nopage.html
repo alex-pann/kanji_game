@@ -59,30 +59,24 @@
         .btn:hover {
             background-color: #491961;
         }
+
+        .back-btn {
+            margin-top: 10px;
+            display: block;
+            font-size: 16px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="content">
         {% block content %}
-        <h2>Добро пожаловать в игру "Кандзи"</h2>
-        <a class="btn" href="{% url 'dictionary' %}" class="btn">Словарь</a>
-        <a class="btn" href="{% url 'ranking' %}">Рейтинг игроков</a>
-        {% if user.is_authenticated %}
-        <div class="center-box">
-            <p style="color:#d664e3;">Привет, {{ user.username }}!</p>
-            <a class="btn" href="{% url 'game' %}">Начать игру</a><br>
-            <a class="btn" href="{% url 'logout' %}">Выйти</a><br>
-            <a class="del_button" href="{% url 'delete_account' %}">Удалить аккаунт</a>
-          </div>
-        {% else %}
-            <p style="color:white;">Чтобы начать игру, войдите или зарегистрируйтесь.</p>
-            <div class="center-box">
-                <a class="btn" href="{% url 'login' %}">Войти</a><br>
-                <a class="btn" href="{% url 'register' %}">Регистрация</a>
-            </div>
-        {% endif %}
-    
-        
+        <h2>Такой страницы пока нет...</h2>
+        <a class="back-btn" href="/">Вернуться на главную</a>
         {% endblock %}
     </div>
 </body>

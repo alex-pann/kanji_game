@@ -1,9 +1,80 @@
-{% extends 'game/base.html' %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Игра "Кандзи"</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'game/favicon.ico' %}" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'game/images/background.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            font-family: sans-serif;
+            text-align: center;
 
-{% block content %}
-    <h2>Выберите правильный перевод:</h2>
-    <img src="{{ kanji.image.url }}" alt="Kanji" width="150">
-    <form method="post">
+        }
+
+        .content {
+            background-color: rgba(0, 0, 0, 0.6);
+            margin: 5vh auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        h2, h3 {
+            color: #fff;
+        }
+
+
+        p {
+            font-size: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #1a171c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #491961;
+        }
+
+        .back-btn {
+            margin-top: 10px;
+            display: block;
+            font-size: 16px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Вопрос {{ question_number }}</h3>
+    <h2>Выберите правильное значение</h2>
+    <div class="content">
+        <img src="{{ kanji.image.url }}" alt="Kanji" width="150">
+    </div>
+
+    <!-- <form method="post">
         {% csrf_token %}
         {% for option in options %}
             <button type="submit" name="answer" value="{{ option }}"
@@ -14,5 +85,39 @@
                 {{ option }}
             </button><br>
         {% endfor %}
+        <a class="back-btn" href="/">Вернуться на главную</a>
+    </form> -->
+
+    <form id="game-form" method="post">
+        {% csrf_token %}
+        {% for option in options %}
+            <button type="button"
+                    class="btn"
+                    onclick="checkAnswer(this, '{{ option }}', '{{ kanji.correct_translation }}')">
+                {{ option }}
+            </button><br>
+        {% endfor %}
+        <input type="hidden" name="answer" id="answer-input">
+        <a class="back-btn" href="/">Вернуться на главную</a>
     </form>
-{% endblock %}
+
+    <script>
+        function checkAnswer(element, chosen, correct) {
+            const buttons = document.querySelectorAll(".btn");
+            buttons.forEach(btn => btn.disabled = true); // блокируем кнопки
+    
+            document.getElementById("answer-input").value = chosen;
+    
+            if (chosen === correct) {
+                element.style.backgroundColor = "#2ecc71"; // зелёный
+            } else {
+                element.style.backgroundColor = "#e74c3c"; // красный
+            }
+    
+            setTimeout(() => {
+                document.getElementById("game-form").submit();
+            }, 800);
+        }
+    </script>
+</body>
+</html>

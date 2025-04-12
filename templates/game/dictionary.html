@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Словарь Кандзи</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'game/favicon.ico' %}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'game/images/background.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            text-align: center;
+            height: 100vh;
+            font-family: sans-serif;
+            color: white;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный черный фон */
+            border-radius: 10px;
+        }
+        h1 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid white;
+            padding: 10px;
+        }
+        a {
+            color: white;
+            text-decoration: underline;
+        }
+        label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        table {
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-collapse: collapse;
+            width: 80%;
+            margin-top: 30px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #d664e3;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #7d3c84;
+        }
+        .back-btn {
+            margin-top: 10px;
+            display: block;
+            font-size: 16px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Словарь Кандзи</h1>
+    <a class="back-btn" href="{% url 'home' %}">Вернуться на главную</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Кандзи</th>
+                <th>Перевод</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for kanji in kanji_list %}
+            <tr>
+                <td><img src="{{ kanji.image.url }}" alt="kanji" height="50"></td>
+                <td>{{ kanji.correct_translation }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">Словарь пуст.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
