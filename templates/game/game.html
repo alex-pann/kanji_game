@@ -68,25 +68,11 @@
 </head>
 
 <body>
-    <h3>Вопрос {{ question_number }}</h3>
+    <h3>Вопрос {{ question_number }}/5</h3>
     <h2>Выберите правильное значение</h2>
     <div class="content">
         <img src="{{ kanji.image.url }}" alt="Kanji" width="150">
     </div>
-
-    <!-- <form method="post">
-        {% csrf_token %}
-        {% for option in options %}
-            <button type="submit" name="answer" value="{{ option }}"
-                    class="btn {% if option == request.POST.answer %}
-                                {% if option == kanji.correct_translation %}correct
-                                {% elif request.session.attempts %}wrong{% endif %}
-                            {% endif %}">
-                {{ option }}
-            </button><br>
-        {% endfor %}
-        <a class="back-btn" href="/">Вернуться на главную</a>
-    </form> -->
 
     <form id="game-form" method="post">
         {% csrf_token %}
@@ -116,7 +102,7 @@
     
             setTimeout(() => {
                 document.getElementById("game-form").submit();
-            }, 800);
+            }, 600);
         }
     </script>
 </body>

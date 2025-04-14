@@ -7,7 +7,7 @@ from django.contrib.auth import logout
 from django.db import models
 import random
 
-question_count = 6
+question_count = 5
 
 def home(request):
     for key in ['attempts', 'question_index', 'score', 'questions']:
@@ -22,7 +22,7 @@ def register(request):
             user = form.save()
             Score.objects.create(user=user)
             login(request, user)
-            return redirect('game')
+            return redirect('home')
     else:
         form = RegisterForm()
     return render(request, 'game/register.html', {'form': form})
